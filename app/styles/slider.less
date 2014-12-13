@@ -1,5 +1,23 @@
 .slider {
+    position: relative;
     .slider-bar {
-        border: 2px solid #000;
+        border: 2px solid #aaa;
+    }
+    .slider-handle {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        position: absolute;
+        top: -10px;
+        display: inline-block;
+        background-color: #fff;
+        border: 1px solid #333;
+
+        &.left-handle {
+            left: 0;
+        }
+        &.right-handle {
+            right: 0;
+        }
     }
 }
