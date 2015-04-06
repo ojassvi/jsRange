@@ -1,0 +1,23 @@
+.slider {
+  position: relative;
+}
+.slider .slider-bar {
+  border: 2px solid #aaa;
+}
+.slider .slider-handle {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  position: absolute;
+  top: -10px;
+  display: inline-block;
+  background-color: #fff;
+  border: 1px solid #333;
+}
+.slider .slider-handle.left-handle {
+  left: 0;
+}
+.slider .slider-handle.right-handle {
+  right: 0;
+}
+/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uL3N0eWxlcy9zbGlkZXIubGVzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTtFQUNJLGtCQUFBOztBQURKLE9BRUk7RUFDSSxzQkFBQTs7QUFIUixPQUtJO0VBQ0ksV0FBQTtFQUNBLFlBQUE7RUFDQSxrQkFBQTtFQUNBLGtCQUFBO0VBQ0EsVUFBQTtFQUNBLHFCQUFBO0VBQ0Esc0JBQUE7RUFDQSxzQkFBQTs7QUFFQSxPQVZKLGVBVUs7RUFDRyxPQUFBOztBQUVKLE9BYkosZUFhSztFQUNHLFFBQUEifQ== */
