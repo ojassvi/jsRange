@@ -1,17 +1,24 @@
 (function () {
     'use strict';
 
-    function Handle(element, parentWidth) {
+    function Handle(element, parent, current) {
         this.handle = element;
         this.start = element.style.left.replace("px", "") || 0;
         this.move = this.start;
-        var self = this;
-        var handleWidthHalf = Math.round(parseInt(window.getComputedStyle(element).width, 10) / 2);
-        parentWidth = parseInt(parentWidth, 10);
+
+        var self = this,
+            handleWidthHalf = Math.round(parseInt(window.getComputedStyle(element).width, 10) / 2),
+            parentWidth = parseInt(window.getComputedStyle(parent).width, 10),
+            other = (current === "left") ? "right" : "left",
+            otherHandle = parent.querySelector("." + other + "-handle"),
+            otherPos = otherHandle.style.left || 0;
 
         this.mousedown = function (e) {
             e.preventDefault();
             self.start = e.clientX - self.move;
+            this.style.zIndex = 1;
+            otherPos = otherHandle.style.left || 0;
+            otherPos = parseInt(otherPos, 10);
             this.addEventListener('mousemove', self.mousemove);
             document.addEventListener('mouseup', self.mouseup);
         };
@@ -22,6 +29,12 @@
             if(self.move < -handleWidthHalf  || self.move > parentWidth) {
                 return;
             }
+            else if(current === 'left' && self.move > otherPos) {
+                return;
+            }
+            else if(current === 'right' && self.move < otherPos) {
+                return;
+            }
 
             self.css({
                 left:  self.move + 'px'
@@ -30,10 +43,9 @@
 
         this.mouseup = function (e) {
             e.preventDefault();
-            setTimeout(function () {
-                self.handle.removeEventListener('mousemove', self.mousemove);
-                document.removeEventListener('mouseup', self.mouseup);
-            }, 200);
+            self.handle.removeEventListener('mousemove', self.mousemove);
+            document.removeEventListener('mouseup', self.mouseup);
+            self.handle.style.zIndex = 0;
         };
 
         this.css = function(params) {
@@ -53,8 +65,8 @@
         var jsRangeWidth = window.getComputedStyle(element).width;
         element.querySelector('.slider-handle.right-handle').style.left = jsRangeWidth;
 
-        var leftHandle = new Handle(element.querySelector('.slider-handle.left-handle'), jsRangeWidth),
-            rightHandle = new Handle(element.querySelector('.slider-handle.right-handle'), jsRangeWidth);
+        var leftHandle = new Handle(element.querySelector('.slider-handle.left-handle'), element, 'left'),
+            rightHandle = new Handle(element.querySelector('.slider-handle.right-handle'), element, 'right');
 
 
         // options = options || {};
@@ -63,69 +75,9 @@
         //     width = options.width || 10,
         //     prevEvt,
         //     left = this.leftHandle.style.left,
-        //     leftWidth = this.leftHandle.style.width,
-        //     rangeWidth,
-        //     rangeLeft;
-
-        // var startX = 0, startY = 0, x = 0, y = 0;
-
-        // this.leftHandle.addEventListener('mousedown', function(e) {
-        //     // rangeWidth = this.offsetWidth;
-        //     // rangeLeft = this.offsetLeft;
-        //     // down = true;
-        //     // console.log(rangeLeft, rangeWidth);
-        //     // console.log(e.pageX);
-        //     console.log(this);
-        //     console.log(e.pageX, x);
-        //     startX = e.pageX - x;
-        //     // startY = event.pageY - y;
-        //     this.leftHandle.addEventListener('mousemove', this.mousemove);
-        //     this.leftHandle.addEventListener('mouseup', this.mouseup);
-
-        //     // updateDragger(e);
-        //     // return false;
-        // }, false);
-
-        // var leftHandle = this.leftHandle,
-        //     rightHandle = this.rightHandle;
-
-        // function mousemove(e) {
-        //     x = e.pageX - startX;
-        //     css({
-        //         left:  x + 'px'
-        //     });
-        // }
-
-        // function mousedown(e) {
-        //     startX = e.pageX - x;
-        //     leftHandle.addEventListener('mousemove', mousemove);
-        //     leftHandle.addEventListener('mouseup', mouseup);
-        // }
+        //     leftWidth = this.leftHandle.style.width
 
 
-        // leftHandle.addEventListener('mousedown', mousedown);
-
-
-        // function mouseup() {
-        //     leftHandle.removeEventListener('mousemove', mousemove);
-        //     leftHandle.removeEventListener('mouseup', mouseup);
-        // }
-
-        // function css(params) {
-        //     for(var p in params) {
-        //         leftHandle.style[p] = params[p];
-        //     }
-        // }
-
-        // function updateDragger(e) {
-        //     if (down && e.pageX >= rangeLeft && e.pageX <= (rangeLeft + rangeWidth)) {
-        //         console.log("yo");
-        //         this.leftHandle.style.left = e.pageX - rangeLeft - leftWidth + 'px';
-        //         if (typeof options.onDrag === "function") {
-        //             options.onDrag(Math.round(((e.pageX - rangeLeft) / rangeWidth) * 100));
-        //         }
-        //     }
-        // }
     }
 
     window.jsRange = jsRange;
