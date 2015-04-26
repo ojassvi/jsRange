@@ -1,22 +1,28 @@
 (function () {
     'use strict';
 
-    function Handle(element) {
+    function Handle(element, parentWidth) {
         this.handle = element;
         this.start = element.style.left.replace("px", "") || 0;
         this.move = this.start;
         var self = this;
+        var handleWidthHalf = Math.round(parseInt(window.getComputedStyle(element).width, 10) / 2);
+        parentWidth = parseInt(parentWidth, 10);
 
         this.mousedown = function (e) {
             e.preventDefault();
-            self.start = e.pageX - self.move;
+            self.start = e.clientX - self.move;
             this.addEventListener('mousemove', self.mousemove);
             document.addEventListener('mouseup', self.mouseup);
         };
 
         this.mousemove = function (e) {
             e.preventDefault();
-            self.move = e.pageX - self.start;
+            self.move = e.clientX - self.start;
+            if(self.move < -handleWidthHalf  || self.move > parentWidth) {
+                return;
+            }
+
             self.css({
                 left:  self.move + 'px'
             });
@@ -24,9 +30,10 @@
 
         this.mouseup = function (e) {
             e.preventDefault();
-            console.log("yo", this);
-            self.handle.removeEventListener('mousemove', self.mousemove);
-            document.removeEventListener('mouseup', self.mouseup);
+            setTimeout(function () {
+                self.handle.removeEventListener('mousemove', self.mousemove);
+                document.removeEventListener('mouseup', self.mouseup);
+            }, 200);
         };
 
         this.css = function(params) {
@@ -46,8 +53,8 @@
         var jsRangeWidth = window.getComputedStyle(element).width;
         element.querySelector('.slider-handle.right-handle').style.left = jsRangeWidth;
 
-        var leftHandle = new Handle(element.querySelector('.slider-handle.left-handle')),
-            rightHandle = new Handle(element.querySelector('.slider-handle.right-handle'));
+        var leftHandle = new Handle(element.querySelector('.slider-handle.left-handle'), jsRangeWidth),
+            rightHandle = new Handle(element.querySelector('.slider-handle.right-handle'), jsRangeWidth);
 
 
         // options = options || {};
