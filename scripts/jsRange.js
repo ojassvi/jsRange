@@ -52,7 +52,6 @@
             startX = e.pageX - x;
             leftHandle.addEventListener('mousemove', mousemove);
             leftHandle.addEventListener('mouseup', mouseup);
-            leftHandle.addEventListener('mouseout', mouseup);
         }
 
 
